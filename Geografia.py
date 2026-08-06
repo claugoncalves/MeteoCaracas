@@ -13,3 +13,13 @@ class Coordenada:
         if self.lat != None and self.lon != None:
             return True 
         return False  
+    
+    class SectorCaracas(Coordenada):
+        """
+        Hereda de Coordenada. Representa una zona especifica dentro de la capital.
+        """
+        def __init__(self, nom_distrito, nom_zona, latitud, longitud):
+            super().__init__(latitud, longitud)
+            self.distrito = nom_distrito
+            self.zona = nom_zona
+            
