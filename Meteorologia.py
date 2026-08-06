@@ -48,4 +48,12 @@ class ReporteEnVivo(RegistroBase):
         elif self.id_cielo == 96: return "Tormenta con granizo ligero"
         elif self.id_cielo == 99: return "Tormenta con granizo fuerte"
         else: return "Desconocido"
+        
+    def mostrar_panel(self):
+        """
+        Imprime los datos actuales en pantalla.
+        """
+        print("Temp: " + str(self.celsius) + " C | Hum: " + str(self.porcentaje_humedad) + " % | Viento: " + str(self.viento_kmh) + " km/h")
+        print("Condicion actual: " + self.interpretar_cielo())
+
     
