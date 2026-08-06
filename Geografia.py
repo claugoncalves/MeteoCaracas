@@ -22,4 +22,10 @@ class Coordenada:
             super().__init__(latitud, longitud)
             self.distrito = nom_distrito
             self.zona = nom_zona
+        
+        def imprimir_resumen(self):
+            """
+            Imprime la informacion basica del sector.
+            """
+            print("- " + self.distrito.upper() + ": " + self.zona + " (Coordenadas: " + str(self.lat) + "," + str(self.lon) + ")") 
             
