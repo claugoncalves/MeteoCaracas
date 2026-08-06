@@ -56,4 +56,11 @@ class ReporteEnVivo(RegistroBase):
         print("Temp: " + str(self.celsius) + " C | Hum: " + str(self.porcentaje_humedad) + " % | Viento: " + str(self.viento_kmh) + " km/h")
         print("Condicion actual: " + self.interpretar_cielo())
 
-    
+class ReporteDiario(RegistroBase):
+    """
+    Clase hija para los datos del pasado. Se agregan la fecha y la lluvia total.
+    """
+    def __init__(self, fecha_calendario, temp_celsius, lluvia_mm, hum_porcentaje, vel_viento):
+        super().__init__(temp_celsius, hum_porcentaje, vel_viento)
+        self.fecha = fecha_calendario
+        self.precipitacion = lluvia_mm    
