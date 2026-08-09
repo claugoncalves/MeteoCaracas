@@ -150,7 +150,63 @@ class AnalizadorClima:
 
         return medias_mensuales
 
+    def generar_graficas(self,df_mensual,nombre_zona):
+        """
+        Despliega 4 graficos distintos para cada magnitud
+        """
+        if df_mensual is None:
+            return
+        fechas=list(df_mensual.index)
+        val_temp = list (df_mensual['Temp'])
+        val_lluvia= list (df_mensual['Lluvia'])
+        val_hum = list (df_mensual['Hum'])
+        val_viento = list (df_mensual['Viento'])
 
+        total_meses=len(fechas)
+        salto= total_meses// 20
+        if salto ==0:
+            salto=1
 
+        puntos_x=[]
+        textos_x=[]
+        for i in range(0, total_meses,salto):
+            puntos_x.append(i)
+            textos_x.append(fechas[i])
 
-    
+        # Grafico de temperatura 
+        plt.figure(num='Temperatura de' + nombre_zona, figsize=(10,4)) 
+        plt.plot(fechas, val_temp, color='red', marker='o') 
+        plt.title('Evolucion de temperatura') 
+        plt.xticks(puntos_x, textos_x, rotation=45, fontsize=8)
+        plt.ylabel('Celsius') 
+        plt.grid(True,linestyle=':', alpha=0.6) 
+        plt.tight_layout() 
+
+        #Grafico de lluvia
+        plt.figure(num='Lluvia de' + nombre_zona, figsize=(10,4)) 
+        plt.bar(fechas, val_lluvia, color='blue') 
+        plt.title('Acumulado de lluvias') 
+        plt.xticks(puntos_x, textos_x, rotation=45, fontsize=8)
+        plt.ylabel('Milimetros') 
+        plt.grid(axis='y',linestyle=':', alpha=0.6) 
+        plt.tight_layout() 
+
+        #Grafico de humedad
+        plt.figure(num='Humedad de' + nombre_zona, figsize=(10,4)) 
+        plt.plot(fechas, val_hum, color='green', marker='s') 
+        plt.title('Humedad Relativa') 
+        plt.xticks(puntos_x, textos_x, rotation=45, fontsize=8)
+        plt.ylabel('Porcentaje') 
+        plt.grid(True,linestyle=':', alpha=0.6) 
+        plt.tight_layout() 
+
+        #Grafico de viento
+        plt.figure(num='Viento de' + nombre_zona, figsize=(10,4)) 
+        plt.plot(fechas, val_viento, color='orange', marker='^') 
+        plt.title('Registros de viento maximo') 
+        plt.xticks(puntos_x, textos_x, rotation=45, fontsize=8)
+        plt.ylabel('km/h') 
+        plt.grid(True,linestyle=':', alpha=0.6) 
+        plt.tight_layout() 
+
+        plt.show()
