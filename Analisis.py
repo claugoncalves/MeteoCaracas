@@ -91,4 +91,66 @@ class AnalizadorClima:
             else:
                 print('Opcion invalida')
 
+    def procesar_historico(self,arreglo_diario,nombre_zona):
+        """
+        Calcula records historicos y medias mensuales/generales.
+        """
+        print('\nREPORTE HISTORICO DE' + nombre_zona.upper())
+        if len(arreglo_diario)==0:
+            print('Arreglo sin datos')
+            return None
 
+        matriz=[]
+        for dia in arreglo_diario:
+            temp=dia.celsius if dia.celsius != None else 0
+            lluv = dia.precipitacion if dia.precipitacion != None else 0
+            hum = dia.porcentaje_humedad if dia.porcentaje_humedad != None else 0
+            vi = dia.viento_kmh if dia.viento_kmh != None else 0
+            matriz.append([dia.fecha,temp,lluv,hum,vi])
+
+        columnas =['Calendario', 'Temp','Lluvia', 'Hum', 'Viento']
+        df_clima = pd.DataFrame(matriz, columns= columnas)
+
+        # Extraccion de indices para los records
+        idx_calor = df_clima['Temp']. idxmax()
+        idx_frio = df_clima['Temp'].idxmin()
+        idx_lluvia= df_clima['Lluvia'].idxmax()
+        idx_hum = df_clima['Hum'].idxmax()
+
+        # Anos
+        yr_calor = df_clima['Calendario']['idx_calor'][0:4]
+        yr_frio = df_clima['Calendario']['idx_frio'][0:4]
+        yr_lluvia = df_clima['Calendario']['idx_lluvia'][0:4]
+        yr_hum = df_clima['Calendario']['idx_hum'][0:4]
+
+        print('\nRECORDS:')
+        print('- Mayor calor:' + yr_calor + '('+ str(df_clima['Temp'][idx_calor]) + 'C)')
+        print('- Mayor frio:' + yr_frio + '('+ str(df_clima['Temp'][idx_frio]) + 'C)')
+        print('- Mayor lluvia:' + yr_lluvia + '('+ str(df_clima['Lluvia'][idx_lluvia]) + 'mm)')
+        print('- Maxima humedad:' + yr_hum + '('+ str(df_clima['Hum'][idx_hum]) + '%)')
+
+       # Agrupacion por mes
+        df_clima['Mes']= df_clima['Calendario'].str.slice(0,7)
+        medias_mensuales=df_clima.groupby('Mes'),[['Calendario', 'Temp','Lluvia', 'Hum', 'Viento']].mean()
+
+        print('\nPROMEDIO POR MES:')
+        pd.set_option('display.max_rows', None)
+        print(medias_mensuales.round(2))
+        pd.reset_option('display.max_rows')
+
+       # Promedios absolutos
+        matriz_np = np.array(df_clima[['Calendario', 'Temp','Lluvia', 'Hum', 'Viento']])
+        medias_absolutas = np.mean(matriz_np, axis=0)
+
+        print('\nPROMEDIOS GLOBALES:')
+        print('-Temperatura global:' + str(round(medias_absolutas[0], 2))+ 'C')
+        print('-Lluvia global:' + str(round(medias_absolutas[1], 2))+ 'mm')
+        print('-Humedad global:' + str(round(medias_absolutas[2], 2))+ '%')
+        print('-Viento global:' + str(round(medias_absolutas[3], 2))+ 'kh/h')
+
+        return medias_mensuales
+
+
+
+
+    
